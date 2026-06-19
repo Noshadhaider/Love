@@ -198,6 +198,174 @@
     font-weight: bold;
     cursor: pointer;
   }
+
+  /* ===== Balloon Love Story Scene ===== */
+  #storyStage {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, #aee8ff 0%, #ffd6e8 60%, #ff9ec0 100%);
+    overflow: hidden;
+    z-index: 999;
+  }
+
+  .cloud {
+    position: absolute;
+    font-size: 2.5rem;
+    opacity: 0.85;
+  }
+
+  .balloon {
+    position: absolute;
+    width: 110px;
+    text-align: center;
+    transition: left 2.5s ease-in-out, top 2.5s ease-in-out;
+  }
+
+  .balloon-body {
+    width: 95px;
+    height: 115px;
+    border-radius: 50% 50% 50% 50% / 55% 55% 45% 45%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset -10px -10px 20px rgba(0,0,0,0.15), 0 8px 18px rgba(0,0,0,0.25);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .balloon-body img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .balloon-emoji-face {
+    font-size: 2.6rem;
+  }
+
+  .balloon-string {
+    width: 2px;
+    height: 45px;
+    background: #c08a4a;
+    margin: 0 auto;
+  }
+
+  .balloon-name {
+    margin-top: 4px;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.4);
+    font-size: 0.95rem;
+  }
+
+  #boyBalloon .balloon-body { background: linear-gradient(135deg, #6fc1ff, #3a8fe0); }
+  #girlBalloon .balloon-body { background: linear-gradient(135deg, #ff9ec8, #ff4da6); }
+
+  #boyBalloon { left: -130px; top: 38%; }
+  #girlBalloon { left: 110%; top: 38%; }
+
+  .floatBob {
+    animation: bob 2.2s ease-in-out infinite;
+  }
+
+  @keyframes bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-14px); }
+  }
+
+  #loveMsg {
+    position: absolute;
+    top: 14%;
+    left: 0; right: 0;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: #ff1a8c;
+    text-shadow: 0 0 8px #fff, 0 0 16px #fff;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+
+  #loveMsg.show { opacity: 1; }
+
+  .bigHeart {
+    position: absolute;
+    font-size: 2.4rem;
+    top: 36%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+  }
+
+  .bigHeart.show {
+    transform: translate(-50%, -50%) scale(1.3);
+    opacity: 1;
+  }
+
+  .floatHeartSmall {
+    position: absolute;
+    font-size: 1.6rem;
+    opacity: 0;
+    animation: floatUpSmall 2.2s ease-out forwards;
+  }
+
+  @keyframes floatUpSmall {
+    0%   { opacity: 1; transform: translateY(0) scale(0.6); }
+    100% { opacity: 0; transform: translateY(-160px) scale(1.2); }
+  }
+
+  #curtainLeft, #curtainRight {
+    position: absolute;
+    top: 0;
+    width: 52%;
+    height: 100%;
+    background: linear-gradient(90deg, #8b0030, #c4144f, #8b0030);
+    box-shadow: inset 0 0 60px rgba(0,0,0,0.5);
+    z-index: 1100;
+    transition: transform 1.4s ease-in;
+  }
+
+  #curtainLeft { left: 0; transform: translateX(-100%); }
+  #curtainRight { right: 0; transform: translateX(100%); }
+
+  #curtainLeft.closeCurtain { transform: translateX(0); }
+  #curtainRight.closeCurtain { transform: translateX(0); }
+
+  #theEndText {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%) scale(0);
+    color: #ffd700;
+    font-size: 2rem;
+    font-weight: 900;
+    text-shadow: 0 0 12px rgba(0,0,0,0.6);
+    z-index: 1200;
+    opacity: 0;
+    transition: transform 0.6s ease, opacity 0.6s ease;
+  }
+
+  #theEndText.show {
+    transform: translate(-50%,-50%) scale(1);
+    opacity: 1;
+  }
+
+  #skipStoryBtn {
+    position: absolute;
+    bottom: 25px;
+    right: 20px;
+    background: rgba(255,255,255,0.85);
+    border: none;
+    border-radius: 30px;
+    padding: 8px 16px;
+    font-weight: bold;
+    color: #ff1a8c;
+    cursor: pointer;
+    z-index: 1300;
+  }
 </style>
 </head>
 <body>
@@ -224,6 +392,38 @@
 </div>
 
 <canvas id="snapCanvas" style="display:none;"></canvas>
+
+<!-- ===== Balloon Love Story Stage ===== -->
+<div id="storyStage">
+  <div class="cloud" style="top:8%; left:10%;">☁️</div>
+  <div class="cloud" style="top:15%; left:70%;">☁️</div>
+  <div class="cloud" style="top:5%; left:45%;">☁️</div>
+
+  <div id="loveMsg">Mil gaye dono piyare 💕</div>
+  <div id="bigHeart" class="bigHeart">💞</div>
+
+  <div id="boyBalloon" class="balloon floatBob">
+    <div class="balloon-body">
+      <span class="balloon-emoji-face">👦</span>
+    </div>
+    <div class="balloon-string"></div>
+    <div class="balloon-name">Noshad</div>
+  </div>
+
+  <div id="girlBalloon" class="balloon floatBob">
+    <div class="balloon-body">
+      <img id="girlBalloonImg" src="" alt="Piyari Larki">
+    </div>
+    <div class="balloon-string"></div>
+    <div class="balloon-name">Piyari ✨</div>
+  </div>
+
+  <div id="curtainLeft"></div>
+  <div id="curtainRight"></div>
+  <div id="theEndText">THE END 💖</div>
+
+  <button id="skipStoryBtn">Skip ⏭</button>
+</div>
 
 <script>
 const mainBtn = document.getElementById('mainBtn');
@@ -363,13 +563,100 @@ function capturePhoto() {
 
   const dataUrl = snapCanvas.toDataURL('image/png');
   resultImg.src = dataUrl;
+  document.getElementById('girlBalloonImg').src = dataUrl;
 
   stopEverything();
   cameraWrap.style.display = 'none';
   resultWrap.style.display = 'flex';
 
   addDecorations();
+
+  // thodi der result dikhane ke baad balloon love-story shuru karo
+  setTimeout(() => {
+    startLoveStory();
+  }, 2200);
 }
+
+function startLoveStory() {
+  resultWrap.style.display = 'none';
+  const stage = document.getElementById('storyStage');
+  const boy = document.getElementById('boyBalloon');
+  const girl = document.getElementById('girlBalloon');
+  const loveMsg = document.getElementById('loveMsg');
+  const bigHeart = document.getElementById('bigHeart');
+  const curtainLeft = document.getElementById('curtainLeft');
+  const curtainRight = document.getElementById('curtainRight');
+  const theEnd = document.getElementById('theEndText');
+
+  // reset positions instantly (transition off temporarily)
+  boy.style.transition = 'none';
+  girl.style.transition = 'none';
+  boy.style.left = '-130px';
+  girl.style.left = '110%';
+  loveMsg.classList.remove('show');
+  bigHeart.classList.remove('show');
+  curtainLeft.classList.remove('closeCurtain');
+  curtainRight.classList.remove('closeCurtain');
+  theEnd.classList.remove('show');
+
+  stage.style.display = 'block';
+
+  // force reflow, then re-enable transition
+  void boy.offsetWidth;
+  boy.style.transition = '';
+  girl.style.transition = '';
+
+  // Step 1: balloons float towards center (Noshad purpose karne aata hai)
+  setTimeout(() => {
+    boy.style.left = '32%';
+    girl.style.left = '52%';
+  }, 300);
+
+  // Step 2: jab dono paas aa jayen - hug + love message + heart
+  setTimeout(() => {
+    boy.style.left = '38%';
+    girl.style.left = '46%';
+    loveMsg.classList.add('show');
+    bigHeart.classList.add('show');
+    spawnFloatingHearts(stage);
+  }, 3100);
+
+  // Step 3: thodi der hug dikhane ke baad parde band ho jaye
+  setTimeout(() => {
+    curtainLeft.classList.add('closeCurtain');
+    curtainRight.classList.add('closeCurtain');
+  }, 6300);
+
+  // Step 4: THE END text
+  setTimeout(() => {
+    theEnd.classList.add('show');
+  }, 7600);
+
+  // Step 5: scene khatam - wapas main screen
+  setTimeout(() => {
+    stage.style.display = 'none';
+    mainBtn.style.display = 'inline-block';
+  }, 10200);
+}
+
+function spawnFloatingHearts(container) {
+  const emojis = ['💕','💖','💗','✨','💞'];
+  for (let i = 0; i < 16; i++) {
+    const span = document.createElement('span');
+    span.className = 'floatHeartSmall';
+    span.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    span.style.left = (40 + Math.random() * 20) + '%';
+    span.style.top = '40%';
+    span.style.animationDelay = (Math.random() * 1.5) + 's';
+    container.appendChild(span);
+    setTimeout(() => span.remove(), 3000);
+  }
+}
+
+document.getElementById('skipStoryBtn').addEventListener('click', () => {
+  document.getElementById('storyStage').style.display = 'none';
+  mainBtn.style.display = 'inline-block';
+});
 
 function addDecorations() {
   // purane hearts/sparkles hata do
